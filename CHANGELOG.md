@@ -2,6 +2,9 @@
 
 ## Grafana Mimir - main / unreleased
 
+### Grafana Mimir
+* [BUGFIX] API: gzip is now enforced when identity encoding is explicitly rejected. #1864
+
 ### Mixin
 
 * [ENHANCEMENT] Dashboards: Add config option `datasource_regex` to customise the regular expression used to select valid datasources for Mimir dashboards. #1802
