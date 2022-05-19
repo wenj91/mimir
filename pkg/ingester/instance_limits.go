@@ -12,7 +12,7 @@ var (
 	errMaxSamplesPushRateLimitReached = errors.New("cannot push more samples: ingester's samples push rate limit reached")
 	errMaxUsersLimitReached           = errors.New("cannot create TSDB: ingesters's max tenants limit reached")
 	errMaxSeriesLimitReached          = errors.New("cannot add series: ingesters's max series limit reached")
-	errTooManyInflightPushRequests    = errors.New("cannot push: too many inflight push requests in ingester")
+	errTooManyInflightPushRequests    = errors.New("cannot push: exceeded the allow number of inflight push requests to the ingester")
 )
 
 // InstanceLimits describes limits used by ingester. Reaching any of these will result in Push method to return
