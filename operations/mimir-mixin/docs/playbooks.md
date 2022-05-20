@@ -1011,6 +1011,100 @@ How to **investigate**:
   1. The alert fired because of a bug in Mimir: fix it.
   1. The alert fired because of a bug or edge case in the continuous test tool, causing a false positive: fix it.
 
+## Codified errors
+
+Mimir has some codified error IDs that you might see in HTTP responses or logs.
+These error IDs allow you to quickly look up more details in the documentation below.
+
+### err-mimir-missing-metric-name
+
+This non-critical error occurs when Mimir receives a write request containing a series without metric name.
+The metric name is required for each series.
+
+> **Note**: Invalid series are skipped during the ingestion, while other valid series within the same request are ingested.
+
+### err-mimir-metric-name-invalid
+
+This non-critical error occurs when Mimir receives a write request containing a series with an invalid metric name.
+A metric name can only contain a well known set of characters, as defined by [Prometheus specifications](https://prometheus.io/docs/concepts/data_model/#metric-names-and-labels).
+Specifically, it may only contain ASCII letters, digits, underscores and colons.
+
+> **Note**: Invalid series are skipped during the ingestion, while other valid series within the same request are ingested.
+
+### err-mimir-max-label-names-per-series
+
+This non-critical error occurs when Mimir receives a write request containing a series with a number of labels exceeding the configured limit.
+The limit is used to protect the system stability from potential abuses or mistakes, and it can be configured on a per-tenant basis using `-validation.max-label-names-per-series`.
+
+> **Note**: Invalid series are skipped during the ingestion, while other valid series within the same request are ingested.
+
+### err-mimir-label-invalid
+
+This non-critical error occurs when Mimir receives a write request containing a series with an invalid label name.
+A label name can only contain a well known set of characters, as defined by [Prometheus specifications](https://prometheus.io/docs/concepts/data_model/#metric-names-and-labels).
+Specifically, it may only contain ASCII letters, digits, and underscores.
+
+> **Note**: Invalid series are skipped during the ingestion, while other valid series within the same request are ingested.
+
+### err-mimir-label-name-too-long
+
+This non-critical error occurs when Mimir receives a write request containing a series with a label name whose length exceeds the configured limit.
+The limit is used to protect the system stability from potential abuses or mistakes, and it can be configured on a per-tenant basis using `-validation.max-length-label-name`.
+
+> **Note**: Invalid series are skipped during the ingestion, while other valid series within the same request are ingested.
+
+### err-mimir-label-value-too-long
+
+This non-critical error occurs when Mimir receives a write request containing a series with a label value whose length exceeds the configured limit.
+The limit is used to protect the system stability from potential abuses or mistakes, and it can be configured on a per-tenant basis using `-validation.max-length-label-value`.
+
+> **Note**: Invalid series are skipped during the ingestion, while other valid series within the same request are ingested.
+
+### err-mimir-duplicate-label-names
+
+This non-critical error occurs when Mimir receives a write request containing a series with the same label name repeated two or more times.
+A series containing repeated label names is invalid and so it gets skipped during the ingestion.
+
+> **Note**: Invalid series are skipped during the ingestion, while other valid series within the same request are ingested.
+
+### err-mimir-labels-not-sorted
+
+This error occurs when Mimir receives a write request containing a series whose label names are not sorted alphabetically.
+However, Mimir internally sort labels for received series, so this error shouldn't occur in pratice.
+If you experience this error, please open an issue in the Mimir repository.
+
+> **Note**: Invalid series are skipped during the ingestion, while other valid series within the same request are ingested.
+
+### err-mimir-too-far-in-future
+
+This non-critical error occurs when Mimir receives a write request containing a sample whose timestamp is in the future compared to the current "real world" time.
+Mimir tolerates timestamps slightly in the future (e.g. due to clock screws), while rejects timestamps more then `-validation.create-grace-period` in the future.
+You can fine tune the toleration on a per-tenant basis using `-validation.max-length-label-value`.
+
+> **Note**: Series with invalid samples are skipped during the ingestion, while other valid series within the same request are ingested.
+
+### err-mimir-exemplar-labels-missing
+
+This non-critical error occurs when Mimir receives a write request containing an exemplar without any label identifying the related metric.
+An exemplar must have at least a valid label pairs, otherwise it can't be associated to any metric.
+
+> **Note**: Invalid exemplars skipped during the ingestion, while other valid exemplars within the same request are ingested.
+
+### err-mimir-exemplar-labels-too-long
+
+This non-critical error occurs when Mimir receives a write request containing an exemplar whose combined labels set size exceeds the limit.
+The limit is used to protect the system stability from potential abuses or mistakes, and it can't be configured.
+
+> **Note**: Invalid exemplars skipped during the ingestion, while other valid exemplars within the same request are ingested.
+
+### err-mimir-exemplar-timestamp-invalid
+
+This non-critical error occurs when Mimir receives a write request containing an exemplar without timestamp.
+An exemplar must have a valid timestamp, otherwise it can't be correlated to any point in time.
+
+> **Note**: Invalid exemplars skipped during the ingestion, while other valid exemplars within the same request are ingested.
+
+
 ## Mimir routes by path
 
 **Write path**:
