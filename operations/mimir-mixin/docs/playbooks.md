@@ -1104,7 +1104,6 @@ An exemplar must have a valid timestamp, otherwise it can't be correlated to any
 
 > **Note**: Invalid exemplars skipped during the ingestion, while other valid exemplars within the same request are ingested.
 
-
 ## Mimir routes by path
 
 **Write path**:
